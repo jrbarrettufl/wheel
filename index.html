@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f6f0">
+  <title>Classroom Spinner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Classroom Spinner home"><span class="brand-icon">✳</span><span>Classroom<span class="brand-light">Spinner</span></span></a>
+      <span class="header-note"><span class="live-dot"></span> RANDOM PICKER</span>
+    </header>
+
+    <section class="intro">
+      <div class="intro-copy">
+        <p class="eyebrow">MAKE EVERY VOICE COUNT</p>
+        <h1>Who’s up next?</h1>
+        <p>Give the wheel a spin and let chance choose your next classroom voice.</p>
+      </div>
+      <div class="round-stamp" aria-hidden="true"><span>FAIR</span><strong>✳</strong><span>& FUN</span></div>
+    </section>
+
+    <section class="workspace">
+      <section class="wheel-card card" aria-label="Student name wheel">
+        <div class="card-topline"><div><p class="eyebrow">THE CLASS WHEEL</p><h2>Take your pick</h2></div><div class="remaining"><strong id="remainingCount">0</strong><span>LEFT</span></div></div>
+        <div class="wheel-stage">
+          <div class="pointer" aria-hidden="true"></div>
+          <canvas id="wheel" aria-label="Spinning wheel with student names"></canvas>
+          <div class="wheel-hub" aria-hidden="true"><span>✳</span></div>
+          <div id="emptyWheel" class="empty-wheel" hidden><span>✳</span><strong>Your wheel is ready</strong><small>Upload a class list to begin</small></div>
+          <div id="wheelWinner" class="wheel-result" hidden><span>SPIN SAYS</span><strong></strong></div>
+        </div>
+        <button id="spinButton" class="spin-button" type="button" disabled><span class="spin-icon">⟳</span> SPIN THE WHEEL</button>
+        <p class="wheel-footnote"><span>✦</span> Each name is picked once, then removed from the wheel.</p>
+      </section>
+
+      <aside class="side-column">
+        <section class="winner-card card" aria-live="polite">
+          <p class="eyebrow">THE SPIN SAYS</p>
+          <div id="winnerContent" class="winner-content"><span class="winner-sparkle">✦</span><p>Your next student<br>will appear here.</p></div>
+        </section>
+        <section class="list-card card">
+          <div class="list-heading"><div><p class="eyebrow">YOUR CLASS</p><h2>Student list</h2></div><span id="listCount" class="list-count">0 names</span></div>
+          <label class="upload-zone" for="csvFile"><span class="upload-icon">↑</span><span><strong>Upload a CSV file</strong><small>Choose a .csv with a Name column</small></span><span class="browse">Browse</span></label>
+          <input id="csvFile" type="file" accept=".csv,text/csv" hidden>
+          <div id="fileMessage" class="file-message" aria-live="polite">Your list stays in this browser tab.</div>
+          <div class="list-actions"><button id="resetButton" class="secondary-button" type="button" disabled>↻ Reset names</button><a href="names-template.csv" download class="template-link">Get CSV template <span>↗</span></a></div>
+          <div id="nameList" class="name-list"><div class="list-empty">No students loaded yet.</div></div>
+        </section>
+        <div class="privacy-note"><span>♢</span><p>Your class list stays on this device. Names aren’t uploaded anywhere.</p></div>
+      </aside>
+    </section>
+    <footer><span>CLASSROOM SPINNER</span><span>One spin. One voice. ✦</span></footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
