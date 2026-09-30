@@ -44,6 +44,12 @@
         </section>
         <section class="list-card card">
           <div class="list-heading"><div><p class="eyebrow">YOUR CLASS</p><h2>Student list</h2></div><span id="listCount" class="list-count">0 names</span></div>
+          <div class="type-names">
+            <label for="typedNames" class="type-label">Type or paste names <span>one student per line</span></label>
+            <textarea id="typedNames" rows="4" placeholder="Avery&#10;Jordan&#10;Sam" spellcheck="false"></textarea>
+            <button id="useTypedNames" class="use-names-button" type="button">Use these names</button>
+          </div>
+          <div class="or-divider"><span>OR UPLOAD A FILE</span></div>
           <label class="upload-zone" for="csvFile"><span class="upload-icon">↑</span><span><strong>Upload a CSV file</strong><small>Choose a .csv with a Name column</small></span><span class="browse">Browse</span></label>
           <input id="csvFile" type="file" accept=".csv,text/csv" hidden>
           <div id="fileMessage" class="file-message" aria-live="polite">Your list stays in this browser tab.</div>

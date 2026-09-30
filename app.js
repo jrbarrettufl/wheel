@@ -4,6 +4,8 @@
   const fileInput = document.querySelector('#csvFile');
   const spinButton = document.querySelector('#spinButton');
   const resetButton = document.querySelector('#resetButton');
+  const typedNames = document.querySelector('#typedNames');
+  const useTypedNames = document.querySelector('#useTypedNames');
   const namesList = document.querySelector('#nameList');
   const palette = ['#dcebdc', '#f6e7c8', '#dce8f3', '#f0dfd7', '#e9e0f2', '#d9eee9', '#f3e4e9', '#eeeacb', '#dce5da', '#f6e2c5'];
   let originalNames = [];
@@ -14,6 +16,27 @@
   let toastTimeout;
 
   const mod = (value, divisor) => ((value % divisor) + divisor) % divisor;
+
+  function randomIndex(length) {
+    if (length <= 1) return 0;
+    if (window.crypto && window.crypto.getRandomValues) {
+      const range = 0x100000000;
+      const limit = Math.floor(range / length) * length;
+      const value = new Uint32Array(1);
+      do { window.crypto.getRandomValues(value); } while (value[0] >= limit);
+      return value[0] % length;
+    }
+    return Math.floor(Math.random() * length);
+  }
+
+  function shuffled(items) {
+    const result = [...items];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = randomIndex(i + 1);
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
 
   function resizeCanvas() {
     const rect = canvas.getBoundingClientRect();
@@ -152,6 +175,26 @@
     return rows.slice(startRow).map(values => (values[column] || '').trim()).filter(Boolean);
   }
 
+  function loadNames(imported, sourceDescription) {
+    originalNames = imported;
+    names = shuffled(imported);
+    rotation = 0;
+    lastWinner = '';
+    clearWinner();
+    announce(`Loaded ${imported.length} ${imported.length === 1 ? 'name' : 'names'} ${sourceDescription}.`);
+    updateList();
+  }
+
+  useTypedNames.addEventListener('click', () => {
+    const imported = typedNames.value.split(/[\n,;]+/).map(name => name.trim()).filter(Boolean);
+    if (!imported.length) {
+      announce('Type or paste at least one student name first.', true);
+      typedNames.focus();
+      return;
+    }
+    loadNames(imported, 'from your typed list');
+  });
+
   fileInput.addEventListener('change', async () => {
     const file = fileInput.files && fileInput.files[0];
     if (!file) return;
@@ -162,13 +205,7 @@
         fileInput.value = '';
         return;
       }
-      originalNames = imported;
-      names = [...imported];
-      rotation = 0;
-      lastWinner = '';
-      clearWinner();
-      announce(`Loaded ${imported.length} ${imported.length === 1 ? 'name' : 'names'} from ${file.name}.`);
-      updateList();
+      loadNames(imported, `from ${file.name}`);
     } catch (error) {
       announce('Could not read that file. Please choose a valid CSV.', true);
     }
@@ -180,7 +217,7 @@
     clearWinner();
     spinning = true;
     updateList();
-    const chosenIndex = Math.floor(Math.random() * names.length);
+    const chosenIndex = randomIndex(names.length);
     const chosenName = names[chosenIndex];
     const slice = (Math.PI * 2) / names.length;
     const targetRotation = mod(-((chosenIndex + 0.5) * slice), Math.PI * 2);
@@ -217,7 +254,7 @@
 
   resetButton.addEventListener('click', () => {
     if (spinning || !originalNames.length) return;
-    names = [...originalNames];
+    names = shuffled(originalNames);
     rotation = 0;
     lastWinner = '';
     clearWinner();
